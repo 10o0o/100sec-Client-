@@ -23,6 +23,14 @@ class App extends React.Component {
     })
   }
 
+  callCancel = () => {
+    socket.emit("cancel");
+    socket.on("cancel", req => {
+      this.setOutput(req.output);
+      this.setCurNum(req.curNum);
+    })
+  }
+
   callStart = () =>{
     console.log('startCall');
 
@@ -32,22 +40,19 @@ class App extends React.Component {
 
     socket.emit("start", { output: this.state.output, curNum: this.state.curNum }); 
     socket.on("start", req => {
-      console.log(req, this.state.output);
       this.setOutput(req.output);
       this.setCurNum(req.curNum);
+
+      // 100까지 더하기가 모두 끝나면 실행됩니다.
+      if (req.end) {
+        alert(`${req.curNum}까지 합은 ${req.output}입니다.`)
+        this.callCancel();
+      }
     });
   }
 
   callPause = () => {
     socket.emit("pause");
-  }
-
-  callCancel = () => {
-    socket.emit("cancel");
-    socket.on("cancel", req => {
-      this.setOutput(req.output);
-      this.setCurNum(req.curNum);
-    })
   }
 
   render() {
