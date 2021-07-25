@@ -1,30 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import socketIO from 'socket.io-client';
+
+const socket = socketIO('http://localhost:4000');
 
 class App extends React.Component {
   state = {
     output: 0
   }
 
-  componentDidMount(){
-    console.log('didMount');
-    this.callApi()
-      .then(res => this.setState({customers: res}))
-      .catch(err => console.log(err));
-  }
+  callApi = () =>{
+    console.log('iocall');
 
-  callApi = async() =>{
-    console.log('callApi');
-    const response = await fetch('/api/customers');
-    const body = await response.json();
-    return body;
+    socket.on("connect", () => {
+      console.log('wow');
+    })
   }
 
   render() {
     return (
       <div>
-        <button onClick={function() { alert('click'); }}>
+        <button onClick={this.callApi}>
           start
         </button>
         <button onClick={function() { alert('click'); }}>
