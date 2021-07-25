@@ -1,17 +1,50 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+
+class App extends React.Component {
+  state = {
+    output: 0
+  }
+
+  componentDidMount(){
+    console.log('didMount');
+    this.callApi()
+      .then(res => this.setState({customers: res}))
+      .catch(err => console.log(err));
+  }
+
+  callApi = async() =>{
+    console.log('callApi');
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={function() { alert('click'); }}>
+          start
+        </button>
+        <button onClick={function() { alert('click'); }}>
+          pause
+        </button>
+        <button onClick={function() { alert('click'); }}>
+          cancel
+        </button>
+
+        <div>
+          {this.state.output}
+        </div>
+      </div>
+    )
+  }
+}
+
+// ========================================
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <App />,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
